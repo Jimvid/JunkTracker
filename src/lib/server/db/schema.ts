@@ -1,6 +1,8 @@
-import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, date, boolean } from 'drizzle-orm/pg-core';
 
-export const user = pgTable('user', {
+export const foodLogsTable = pgTable('food_logs', {
 	id: serial('id').primaryKey(),
-	age: integer('age')
+	description: text('description').notNull(),
+	junkFree: boolean('junk_free'),
+	date: date('date').notNull()
 });
