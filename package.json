@@ -1,5 +1,5 @@
 {
-	"name": "trashlog",
+	"name": "JunkTracker",
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
@@ -44,8 +44,11 @@
 	},
 	"dependencies": {
 		"@faker-js/faker": "^9.2.0",
+		"@oslojs/crypto": "^1.0.1",
+		"@oslojs/encoding": "^1.1.0",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.15",
+		"arctic": "^2.3.3",
 		"date-fns": "^4.1.0",
 		"drizzle-orm": "^0.33.0",
 		"postgres": "^3.4.4"
