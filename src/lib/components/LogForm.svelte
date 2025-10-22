@@ -1,36 +1,55 @@
 <script lang="ts">
 	import { format } from 'date-fns';
-	const today = format(new Date(), 'yyyy-MM-dd');
+
+	let { selectedDate = format(new Date(), 'yyyy-MM-dd') } = $props();
 </script>
 
-<form class="flex flex-col gap-2 md:flex-row" method="POST" action="?/addLog">
-	<input
-		class="flex-auto rounded-[4px] border border-black p-3"
-		type="text"
-		id="description"
-		name="description"
-		placeholder="What did you eat or resist to eat?"
-		required
-	/>
-	<input
-		class="rounded-[4px] border border-black p-3"
-		required
-		value={today}
-		type="date"
-		id="date"
-		name="date"
-	/>
-	<label class="rounded-[4px] border border-black p-3" for="junkfree"
-		>Did you resist your inner demons?
-		<input
-			class="ml-2 rounded-[4px] border border-black"
-			type="checkbox"
-			id="junkfree"
-			name="junkfree"
-		/>
-	</label>
+<form class="rounded-lg border border-gray-300 bg-white p-6 shadow-sm" method="POST" action="?/addLog">
+	<h2 class="mb-4 text-lg font-semibold text-gray-900">Add Entry</h2>
 
-	<button class="rounded-[4px] border border-black bg-black p-3 text-white" type="submit"
-		>Submit</button
-	>
+	<div class="flex flex-col gap-3 md:flex-row md:items-end">
+		<div class="flex-auto">
+			<label class="mb-1 block text-sm font-medium text-gray-700" for="description">
+				Description
+			</label>
+			<input
+				class="w-full rounded-lg border border-gray-300 p-3 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+				type="text"
+				id="description"
+				name="description"
+				placeholder="What did you eat or resist?"
+			/>
+		</div>
+
+		<div>
+			<label class="mb-1 block text-sm font-medium text-gray-700" for="date">
+				Date
+			</label>
+			<input
+				class="rounded-lg border border-gray-300 p-3 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+				required
+				value={selectedDate}
+				type="date"
+				id="date"
+				name="date"
+			/>
+		</div>
+
+		<label class="flex items-center gap-2 rounded-lg border border-gray-300 p-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50" for="junkfree">
+			<input
+				class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-200"
+				type="checkbox"
+				id="junkfree"
+				name="junkfree"
+			/>
+			<span>Junk-free day</span>
+		</label>
+
+		<button
+			class="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 active:bg-blue-800"
+			type="submit"
+		>
+			Add Entry
+		</button>
+	</div>
 </form>

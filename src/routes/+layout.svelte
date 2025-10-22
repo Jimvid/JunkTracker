@@ -7,7 +7,7 @@
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>
 
-<main class="container mx-auto max-w-[1180px]">
+<main class="container mx-auto max-w-[1180px] p-4">
 	<Navbar isLoggedIn={data.isLoggedIn} />
 	{@render children()}
 </main>

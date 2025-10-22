@@ -1,4 +1,4 @@
-import { addJunkLog, getAllJunkLogs } from '$lib/server/queries/junkLog';
+import { addJunkLog, getAllJunkLogs, deleteJunkLog } from '$lib/server/queries/junkLog';
 import type { JunkLog } from '$lib/server/db/schema';
 
 import { fail, type Actions } from '@sveltejs/kit';
@@ -25,8 +25,7 @@ export const actions = {
 	addLog: async ({ request }) => {
 		const data = await request.formData();
 
-		const description = data.get('description')?.toString();
-		if (!description) return fail(400, { description, missing: true });
+		const description = data.get('description')?.toString() || '';
 
 		const date = data.get('date')?.toString();
 		if (!date) return fail(400, { date, missing: true });
@@ -40,5 +39,13 @@ export const actions = {
 		} as JunkLog;
 
 		await addJunkLog(food);
+	},
+	deleteLog: async ({ request }) => {
+		const data = await request.formData();
+
+		const id = data.get('id')?.toString();
+		if (!id) return fail(400, { id, missing: true });
+
+		await deleteJunkLog(Number(id));
 	}
 } satisfies Actions;
