@@ -3,7 +3,7 @@
 </script>
 
 <nav
-	class="mb-4 flex flex-col items-center justify-between gap-4 rounded-lg border border-gray-300 bg-white px-6 py-4 shadow-sm sm:flex-row"
+	class="mb-4 flex flex-row items-center justify-between gap-4 rounded-lg border border-gray-300 bg-white px-6 py-4 shadow-sm"
 >
 	<div class="flex items-center gap-2 font-bold">
 		<div class="rounded-full bg-gray-100 p-2">
