@@ -3,9 +3,15 @@ import { pgTable, serial, text, date, boolean, integer, timestamp } from 'drizzl
 
 export const junkLogTable = pgTable('junk_log', {
 	id: serial('id').primaryKey(),
+	userId: integer('user_id')
+		.references(() => userTable.id),
 	description: text('description').notNull(),
 	junkFree: boolean('junk_free'),
-	date: date('date').notNull()
+	date: date('date').notNull(),
+	createdAt: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'date'
+	}).defaultNow()
 });
 
 export const userTable = pgTable('user', {

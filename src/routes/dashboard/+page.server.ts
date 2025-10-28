@@ -1,12 +1,16 @@
 import { addJunkLog, getAllJunkLogs, deleteJunkLog } from '$lib/server/queries/junkLog';
 import type { JunkLog } from '$lib/server/db/schema';
 
-import { fail, type Actions } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { generateYearContributions, type ContributionData } from '$lib/util';
 
-export const load: PageServerLoad = async () => {
-	const data = await getAllJunkLogs();
+export const load: PageServerLoad = async (event) => {
+	if (!event.locals.user) {
+		throw redirect(302, '/login');
+	}
+
+	const data = await getAllJunkLogs(event.locals.user.id);
 	const numberOfContributions = data.data.length;
 
 	const contributions: { [key: number]: ContributionData } = {
@@ -22,7 +26,9 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions = {
-	addLog: async ({ request }) => {
+	addLog: async ({ request, locals }) => {
+		if (!locals.user) return fail(401, { unauthorized: true });
+
 		const data = await request.formData();
 
 		const description = data.get('description')?.toString() || '';
@@ -38,14 +44,16 @@ export const actions = {
 			junkFree
 		} as JunkLog;
 
-		await addJunkLog(food);
+		await addJunkLog(food, locals.user.id);
 	},
-	deleteLog: async ({ request }) => {
+	deleteLog: async ({ request, locals }) => {
+		if (!locals.user) return fail(401, { unauthorized: true });
+
 		const data = await request.formData();
 
 		const id = data.get('id')?.toString();
 		if (!id) return fail(400, { id, missing: true });
 
-		await deleteJunkLog(Number(id));
+		await deleteJunkLog(Number(id), locals.user.id);
 	}
 } satisfies Actions;
