@@ -55,9 +55,9 @@
 		return count;
 	}
 
-	const currentYearContributions = data.contributions[selectedYear] || {};
-	const currentStreak = calculateCurrentStreak(currentYearContributions);
-	const junkFreeDays = calculateJunkFreeDays(currentYearContributions);
+	const currentYearContributions = $derived(data.contributions[selectedYear] || {});
+	const currentStreak = $derived(calculateCurrentStreak(currentYearContributions));
+	const junkFreeDays = $derived(calculateJunkFreeDays(currentYearContributions));
 
 	// Get months for the selected quarter
 	function getQuarterMonths(quarter: number): number[] {
