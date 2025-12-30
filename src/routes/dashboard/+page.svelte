@@ -15,7 +15,6 @@
 	let selectedQuarter: number = $state(Math.floor(new Date().getMonth() / 3)); // 0-3 (Q1, Q2, Q3, Q4)
 	let hoveredDay: string | null = $state(null);
 	let selectedFormDate: string = $state(format(new Date(), 'yyyy-MM-dd'));
-	const availableYears = [2024, 2025];
 
 	function handleDateClick(dateStr: string) {
 		selectedFormDate = dateStr;
@@ -23,7 +22,6 @@
 
 	// Calculate stats
 	function calculateCurrentStreak(contributions: { [date: string]: any[] | null }): number {
-		const today = format(new Date(), 'yyyy-MM-dd');
 		let streak = 0;
 		let currentDate = new Date();
 
@@ -250,45 +248,43 @@
 						</div>
 
 						<!-- Calendar days -->
-						{#if data.contributions[selectedYear]}
-							<div class="grid grid-cols-7 gap-1">
-								{#each calendarDays as day}
-									{@const dateStr = format(day, 'yyyy-MM-dd')}
-									{@const dayData = data.contributions[selectedYear][dateStr]}
-									{@const isCurrentMonth = day.getMonth() === monthIndex}
-									{@const isToday = dateStr === format(new Date(), 'yyyy-MM-dd')}
-									{@const isJunkFree = dayData?.every((log) => log.junkFree)}
+						<div class="grid grid-cols-7 gap-1">
+							{#each calendarDays as day}
+								{@const dateStr = format(day, 'yyyy-MM-dd')}
+								{@const dayData = data.contributions[selectedYear]?.[dateStr]}
+								{@const isCurrentMonth = day.getMonth() === monthIndex}
+								{@const isToday = dateStr === format(new Date(), 'yyyy-MM-dd')}
+								{@const isJunkFree = dayData?.every((log) => log.junkFree)}
 
-									<button
-										class="group relative aspect-square rounded border {isToday ? 'border-blue-500 ring-2 ring-blue-300' : 'border-transparent'} flex items-center justify-center text-[10px] font-medium transition-all hover:scale-110 hover:z-10 {!isCurrentMonth ? 'opacity-20' : ''}"
-										style="background-color: {dayData ? (isJunkFree ? '#2b984b' : getColor(dayData.length)) : '#fafafa'}"
-										onmouseenter={() => hoveredDay = dateStr}
-										onmouseleave={() => hoveredDay = null}
-										onclick={() => handleDateClick(dateStr)}
-									>
-										<span class="{dayData && !isJunkFree ? 'text-white' : 'text-gray-700'}">
-											{day.getDate()}
-										</span>
+								<button
+									class="group relative aspect-square rounded border {isToday ? 'border-blue-500 ring-2 ring-blue-300' : 'border-transparent'} flex items-center justify-center text-[10px] font-medium transition-all hover:scale-110 hover:z-10 {!isCurrentMonth ? 'opacity-20' : ''}"
+									style="background-color: {dayData ? (isJunkFree ? '#2b984b' : getColor(dayData.length)) : '#fafafa'}"
+									onmouseenter={() => hoveredDay = dateStr}
+									onmouseleave={() => hoveredDay = null}
+									onclick={() => handleDateClick(dateStr)}
+								>
+									<span class="{dayData && !isJunkFree ? 'text-white' : 'text-gray-700'}">
+										{day.getDate()}
+									</span>
 
-										<!-- Tooltip popup -->
-										{#if hoveredDay === dateStr && dayData}
-											<div class="absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-xs text-white shadow-xl">
-												<div class="font-semibold">{format(day, 'MMM d, yyyy')}</div>
-												<div class="mt-1">
-													{#if isJunkFree}
-														<span class="text-green-400">✓ Junk-free day!</span>
-													{:else}
-														<span>{dayData.length} contribution{dayData.length !== 1 ? 's' : ''}</span>
-													{/if}
-												</div>
-												<!-- Arrow pointing down -->
-												<div class="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+									<!-- Tooltip popup -->
+									{#if hoveredDay === dateStr && dayData}
+										<div class="absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-xs text-white shadow-xl">
+											<div class="font-semibold">{format(day, 'MMM d, yyyy')}</div>
+											<div class="mt-1">
+												{#if isJunkFree}
+													<span class="text-green-400">✓ Junk-free day!</span>
+												{:else}
+													<span>{dayData.length} contribution{dayData.length !== 1 ? 's' : ''}</span>
+												{/if}
 											</div>
-										{/if}
-									</button>
-								{/each}
-							</div>
-						{/if}
+											<!-- Arrow pointing down -->
+											<div class="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+										</div>
+									{/if}
+								</button>
+							{/each}
+						</div>
 					</div>
 				{/each}
 			</div>
@@ -339,49 +335,46 @@
 				</div>
 
 				<!-- Calendar days -->
-				{#if data.contributions[selectedYear]}
-					{@const calendarDays = getCalendarDays(selectedYear, selectedMonth)}
-					<div class="grid grid-cols-7 gap-1">
-						{#each calendarDays as day}
-							{@const dateStr = format(day, 'yyyy-MM-dd')}
-							{@const dayData = data.contributions[selectedYear][dateStr]}
-							{@const isCurrentMonth = day.getMonth() === selectedMonth}
-							{@const isToday = dateStr === format(new Date(), 'yyyy-MM-dd')}
-							{@const isJunkFree = dayData?.every((log) => log.junkFree)}
+				<div class="grid grid-cols-7 gap-1">
+					{#each getCalendarDays(selectedYear, selectedMonth) as day}
+						{@const dateStr = format(day, 'yyyy-MM-dd')}
+						{@const dayData = data.contributions[selectedYear]?.[dateStr]}
+						{@const isCurrentMonth = day.getMonth() === selectedMonth}
+						{@const isToday = dateStr === format(new Date(), 'yyyy-MM-dd')}
+						{@const isJunkFree = dayData?.every((log) => log.junkFree)}
 
-							<button
-								class="relative aspect-square rounded-lg border-2 {isToday ? 'border-blue-500' : 'border-transparent'} flex items-center justify-center p-1 {!isCurrentMonth ? 'opacity-30' : ''} transition-transform active:scale-95"
-								style="background-color: {dayData ? (isJunkFree ? '#2b984b' : getColor(dayData.length)) : '#fafafa'}"
-								onmouseenter={() => hoveredDay = dateStr}
-								onmouseleave={() => hoveredDay = null}
-								onclick={() => {
-									hoveredDay = hoveredDay === dateStr ? null : dateStr;
-									handleDateClick(dateStr);
-								}}
-							>
-								<span class="text-xs font-medium {dayData && !isJunkFree ? 'text-white' : 'text-gray-700'}">
-									{day.getDate()}
-								</span>
+						<button
+							class="relative aspect-square rounded-lg border-2 {isToday ? 'border-blue-500' : 'border-transparent'} flex items-center justify-center p-1 {!isCurrentMonth ? 'opacity-30' : ''} transition-transform active:scale-95"
+							style="background-color: {dayData ? (isJunkFree ? '#2b984b' : getColor(dayData.length)) : '#fafafa'}"
+							onmouseenter={() => hoveredDay = dateStr}
+							onmouseleave={() => hoveredDay = null}
+							onclick={() => {
+								hoveredDay = hoveredDay === dateStr ? null : dateStr;
+								handleDateClick(dateStr);
+							}}
+						>
+							<span class="text-xs font-medium {dayData && !isJunkFree ? 'text-white' : 'text-gray-700'}">
+								{day.getDate()}
+							</span>
 
-								<!-- Tooltip popup -->
-								{#if hoveredDay === dateStr && dayData}
-									<div class="absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-xs text-white shadow-lg">
-										<div class="font-semibold">{format(day, 'MMM d, yyyy')}</div>
-										<div class="mt-1">
-											{#if isJunkFree}
-												<span class="text-green-400">✓ Junk-free day!</span>
-											{:else}
-												<span>{dayData.length} contribution{dayData.length !== 1 ? 's' : ''}</span>
-											{/if}
-										</div>
-										<!-- Arrow pointing down -->
-										<div class="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+							<!-- Tooltip popup -->
+							{#if hoveredDay === dateStr && dayData}
+								<div class="absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-xs text-white shadow-lg">
+									<div class="font-semibold">{format(day, 'MMM d, yyyy')}</div>
+									<div class="mt-1">
+										{#if isJunkFree}
+											<span class="text-green-400">✓ Junk-free day!</span>
+										{:else}
+											<span>{dayData.length} contribution{dayData.length !== 1 ? 's' : ''}</span>
+										{/if}
 									</div>
-								{/if}
-							</button>
-						{/each}
-					</div>
-				{/if}
+									<!-- Arrow pointing down -->
+									<div class="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+								</div>
+							{/if}
+						</button>
+					{/each}
+				</div>
 			</div>
 		</div>
 	</div>
