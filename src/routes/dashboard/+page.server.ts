@@ -14,12 +14,14 @@ export const load: PageServerLoad = async (event) => {
 	const numberOfContributions = data.data.length;
 
 	const contributions: { [key: number]: ContributionData } = {
+        // TODO: fix this 
 		2024: generateYearContributions(data.data, 2024)['2024'],
-		2025: generateYearContributions(data.data, 2025)['2025']
+		2025: generateYearContributions(data.data, 2025)['2025'],
+		2026: generateYearContributions(data.data, 2026)['2026']
 	};
 
 	return {
-		contributions: contributions,
+		contributions,
 		numberOfContributions: numberOfContributions,
 		logs: data.data
 	};
